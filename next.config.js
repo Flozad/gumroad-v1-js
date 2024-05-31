@@ -1,18 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  trailingSlash: true,
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        fs: false,
-        path: false,
-        os: false,
-      };
-    }
-
-    return config;
+  swcMinify: true,
+  experimental: {
+    appDir: true,
   },
+  output: 'standalone',
+  distDir: '.next',
 };
 
 module.exports = nextConfig;

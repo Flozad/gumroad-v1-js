@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST='{"pages/_app.tsx -> react-router-dom":{"id":1078,"files":["static/chunks/349f80dd-47a8258df623b018.js","static/chunks/78-afc4c0967528d99d.js"]}}';
