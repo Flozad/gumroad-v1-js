@@ -38,4 +38,5 @@ class Flash {
   }
 }
 
-export default new Flash();
+const flash = new Flash();
+export default flash;
