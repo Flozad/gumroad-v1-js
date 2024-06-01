@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev src/app",
-    "build": "next build",
+    "build": "next build src/app",
     "start": "next start src/app",
     "lint": "next lint src/app"
   },
@@ -20,7 +20,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-router-dom": "^6.23.1",
-    "stripe": "^15.8.0"
+    "stripe": "^15.8.0",
+    "vercel": "^34.2.4"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

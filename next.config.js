@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   output: 'standalone',
-  distDir: 'src/app/.next',
+  distDir: '../../.next', // Ensure this is set correctly
 };
 
 module.exports = nextConfig;
