@@ -11,6 +11,7 @@ const HeadMeta: React.FC<HeadMetaProps> = ({ title }) => (
     <title>{title ? title : 'Gumroad - Selling should be as easy as sharing a link.'}</title>
     <meta property="og:site_name" content="Gumroad" />
     <meta property="og:title" content="Gumroad" />
+    <link rel="icon" href="./favicon.ico" />
     <meta property="og:url" content="http://gumroad.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Selling should be as easy as sharing a link." />

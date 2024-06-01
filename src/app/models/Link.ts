@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ILink extends Document {
+  _id: string; // Add _id to the interface
   owner: string;
   name: string;
   unique_permalink: string;
@@ -34,4 +35,4 @@ const LinkSchema: Schema = new Schema({
   balance: { type: Number, default: 0.00 }
 });
 
-export default mongoose.model<ILink>('Link', LinkSchema);
+export default mongoose.models.Link || mongoose.model<ILink>('Link', LinkSchema);

@@ -1,26 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
+import { isAuthenticated } from '../utils/auth';
+import { useRouter } from 'next/router';
 
 const StatsPage: React.FC = () => {
-  const [isClient, setIsClient] = useState(true);
+  const [data, setData] = useState<any>(null);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-  const number_of_links = 123; // Replace with actual data
-  const number_of_users = 456; // Replace with actual data
-  const purchase_total = 7890; // Replace with actual data
-  const number_of_purchases = 1011; // Replace with actual data
+    if (!isAuthenticated()) {
+      router.push('/login');
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/stats');
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          setShowError(true);
+          setErrorMessage('Failed to fetch data');
+        }
+      } catch (error) {
+        setShowError(true);
+        setErrorMessage('An unexpected error occurred');
+      }
+    };
+
+    fetchData();
+  }, [router]);
+
+  if (!data) return <div>Loading...</div>;
+
+  const number_of_links = data.numberOfLinks || 0;
+  const number_of_users = data.numberOfUsers || 0;
+  const purchase_total = data.purchaseTotal || 0;
+  const number_of_purchases = data.numberOfPurchases || 0;
   const average_purchase = (purchase_total / number_of_purchases).toFixed(2);
-  const number_of_views = 1213; // Replace with actual data
-  const number_of_downloads = 1415; // Replace with actual data
+  const number_of_views = data.numberOfViews || 0;
+  const number_of_downloads = data.numberOfDownloads || 0;
   const average_views = (number_of_views / number_of_links).toFixed(2);
   const average_downloads = (number_of_downloads / number_of_links).toFixed(2);
-  const last_link_date = "2 days"; // Replace with actual data
-  const last_purchase_date = "3 hours"; // Replace with actual data
-  if (!isClient) {
-    return null;
-  }
+  const last_link_date = data.lastLinkDate || 'N/A';
+  const last_purchase_date = data.lastPurchaseDate || 'N/A';
 
   return (
     <Layout title="Stats" hideFooter={false} hideHeader={false} showLoginLink={false} loggedIn={false} onLinksPage={false} userBalance={0} bodyId="page-stats">

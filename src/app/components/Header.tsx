@@ -32,6 +32,7 @@ const Header: React.FC<HeaderProps> = ({
       <script src="./static/plupload/gears_init.js"></script>
       <script src="./static/plupload/plupload.full.min.js"></script>
       <script src="./static/js/app.js"></script>
+      <link rel="icon" href="/favicon.ico" />
       <script>
         {`window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}

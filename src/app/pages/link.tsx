@@ -1,8 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { useRouter } from 'next/router';
-import Link from 'next/link'
+import { isAuthenticated, getUserId } from '../utils/auth';
+import Link from 'next/link';
+
 const LinkPage: React.FC = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -17,12 +19,20 @@ const LinkPage: React.FC = () => {
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [linkToShare, setLinkToShare] = useState('');
-  const [uploadUrl, setUploadUrl] = useState('');
   const [views, setViews] = useState(0);
   const [conversion, setConversion] = useState(0);
   const [numberOfDownloads, setNumberOfDownloads] = useState(0);
   const [price, setPrice] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
+
+  console.log(localStorage.getItem('token'));
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      // router.push('/login');
+      return;
+    }
+  }, [router]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -32,17 +42,34 @@ const LinkPage: React.FC = () => {
     });
   };
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Add form submission logic here
-  };
+    setShowError(false);
+    setErrorMessage('');
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Add file upload logic here
-  };
+    try {
+      const userId = getUserId();
+      const response = await fetch('/api/links', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...formData, owner: userId }),
+      });
 
-  const handlePreviewFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Add preview file upload logic here
+      if (response.ok) {
+        const data = await response.json();
+        setLinkToShare(data.link.unique_permalink);
+        setIsEditing(true);
+      } else {
+        const data = await response.json();
+        setShowError(true);
+        setErrorMessage(data.message || 'An error occurred');
+      }
+    } catch (error) {
+      setShowError(true);
+      setErrorMessage('An unexpected error occurred');
+    }
   };
 
   const showConfirm = () => {
@@ -106,14 +133,14 @@ const LinkPage: React.FC = () => {
           <label htmlFor="url">URL:</label>
           <input id="url" name="url" type="text" placeholder="http://" value={formData.url} onChange={handleInputChange} />
           <div id="container">
-            <input type="file" id="pickfile" onChange={handleFileUpload} />
+            <input type="file" id="pickfile" onChange={(e) => { /* Add file upload logic here */ }} />
           </div>
         </p>
         <p>
           <label htmlFor="preview_url">Preview URL:</label>
           <input id="preview_url" name="previewUrl" type="text" placeholder="http://" value={formData.previewUrl} onChange={handleInputChange} />
           <div id="preview_container">
-            <input type="file" id="pickpreviewfile" onChange={handlePreviewFileUpload} />
+            <input type="file" id="pickpreviewfile" onChange={(e) => { /* Add preview file upload logic here */ }} />
           </div>
         </p>
         <p>

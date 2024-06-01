@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import Layout from '../components/Layout';
+import React, { useState, useEffect } from 'react';
+import Layout from '../../components/Layout';
 import axios from 'axios';
-import Link from 'next/link'
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+
 const VisitingLinkPage: React.FC = () => {
+  const router = useRouter();
+  const { linkId } = router.query; // Assuming the linkId is passed as a query parameter
   const [formData, setFormData] = useState({
     card_number: '',
     expiry_month: '1',
@@ -25,7 +29,7 @@ const VisitingLinkPage: React.FC = () => {
     setMessage('Processing...');
     setIsError(false);
     try {
-      const response = await axios.post(`/l/permalink`, formData); // Replace 'permalink' with actual value
+      const response = await axios.post(`/api/sale/${linkId}`, formData); // Pass the linkId in the URL
       if (response.data.success) {
         setMessage('Success!');
         window.location.href = response.data.redirect_url;

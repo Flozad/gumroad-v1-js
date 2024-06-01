@@ -1,95 +1,95 @@
-import React, { useState } from 'react';
+/* eslint-disable @next/next/no-img-element */
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
-import Link from 'next/link'
-const LinkPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    price: '',
-    url: '',
-    previewUrl: '',
-    description: '',
-    downloadLimit: '',
-  });
-  const [isEditing, setIsEditing] = useState(false);
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { ILink } from '../models/Link';
+import { isAuthenticated, getUserId } from '../utils/auth';
+
+const LinksPage: React.FC = () => {
+  const [links, setLinks] = useState<ILink[]>([]);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push('/login');
+      return;
+    }
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Add form submission logic here
-  };
+    const userId = getUserId();
+    if (!userId) {
+      router.push('/login');
+      return;
+    }
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Add file upload logic here
+    const fetchLinks = async () => {
+      try {
+        const response = await fetch(`/api/user/${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setLinks(data);
+        } else {
+          setShowError(true);
+          setErrorMessage('Failed to fetch links');
+        }
+      } catch (error) {
+        setShowError(true);
+        setErrorMessage('An unexpected error occurred');
+      }
+    };
+
+    fetchLinks();
+  }, [router]);
+
+  const handleDelete = async (linkId: string) => {
+    if (confirm("Are you sure you want to delete this link? There's no going back!")) {
+      try {
+        const response = await fetch(`/api/links/${linkId}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          setLinks(links.filter(link => link._id !== linkId));
+        } else {
+          setShowError(true);
+          setErrorMessage('Failed to delete link');
+        }
+      } catch (error) {
+        setShowError(true);
+        setErrorMessage('An unexpected error occurred');
+      }
+    }
   };
 
   return (
-    <Layout title="Link" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={0} bodyId="page-link">
-      <form id="large-form" action={isEditing ? `/edit/${formData.name}` : '/create'} method="post" className={isEditing ? 'editing-link' : ''} onSubmit={handleFormSubmit}>
-        {isEditing ? (
-          <>
-            <Link href="#" id="delete_link" onClick={() => confirm("Are you sure you want to delete this link? There's no going back!")}>delete this link</Link>
-            <h3>Edit link {showError && <small className="error">{errorMessage}</small>}</h3>
-          </>
-        ) : (
-          <h3>Create a new link {showError && <small className="error">{errorMessage}</small>}</h3>
-        )}
-
-        <p>
-          <label htmlFor="name">Name:</label>
-          <input id="name" name="name" type="text" placeholder="name" value={formData.name} onChange={handleInputChange} />
-        </p>
-        <p>
-          <label htmlFor="price">Price:</label>
-          <input id="price" name="price" type="text" placeholder="$10" value={formData.price} onChange={handleInputChange} />
-        </p>
-        <p>
-          <label htmlFor="url">URL:</label>
-          <input id="url" name="url" type="text" placeholder="http://" value={formData.url} onChange={handleInputChange} />
-          <div id="container">
-            <input type="file" id="pickfile" onChange={handleFileUpload} />
-          </div>
-        </p>
-        <p>
-          <label htmlFor="previewUrl">Preview URL:</label>
-          <input id="previewUrl" name="previewUrl" type="text" placeholder="http://" value={formData.previewUrl} onChange={handleInputChange} />
-          <div id="preview_container">
-            <input type="file" id="pickpreviewfile" onChange={handleFileUpload} />
-          </div>
-        </p>
-        <p>
-          <label htmlFor="description">Description:<br /><span className="faint">(optional)</span></label>
-          <textarea id="description" name="description" value={formData.description} onChange={handleInputChange} />
-        </p>
-
-        <p><button type="submit">{isEditing ? 'Save changes' : 'Add link'}</button></p>
-
-        {isEditing && (
-          <>
-            <div className="mini-rule"></div>
-            <div id="link-options">
-              <h4>Additional link options:</h4>
-              <p>
-                <label htmlFor="downloadLimit">Download limit:</label>
-                <input id="downloadLimit" name="downloadLimit" type="text" placeholder="0" value={formData.downloadLimit} onChange={handleInputChange} title="The number of people that can purchase this item. 0 means no limit!" />
-              </p>
-            </div>
-          </>
-        )}
-
-        <div className="rainbow bar"></div>
-      </form>
+    <Layout title="Links" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={true} userBalance={0} bodyId="page-links">
+      <div id="links-management">
+        <h3>Your Links</h3>
+        {showError && <small className="error">{errorMessage}</small>}
+        <div>
+          <button onClick={() => router.push('/link')} style={{ padding: '10px 20px', backgroundColor: '#EB6841', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Create Link</button>
+        </div>
+        <ul>
+          {links.map((link) => (
+            <li key={link._id}>
+              <h4>{link.name}</h4>
+              <p>Price: ${link.price}</p>
+              <p>URL: <a href={link.url} target="_blank" rel="noopener noreferrer">{link.url}</a></p>
+              <p>Preview URL: <a href={link.preview_url} target="_blank" rel="noopener noreferrer">{link.preview_url}</a></p>
+              <p>Description: {link.description}</p>
+              <p>Downloads: {link.number_of_downloads}</p>
+              <p>Views: {link.number_of_views}</p>
+              <button onClick={() => router.push(`/link/${link._id}`)} style={{ padding: '5px 10px', backgroundColor: '#EB6841', color: '#fff', border: 'none', borderRadius: '3px', cursor: 'pointer' }}>Edit</button>
+              <button onClick={() => handleDelete(link._id)} style={{ padding: '5px 10px', backgroundColor: '#CC333F', color: '#fff', border: 'none', borderRadius: '3px', cursor: 'pointer', marginLeft: '10px' }}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      </div>
       <p id="below-form-p">&nbsp;</p>
     </Layout>
   );
 };
 
-export default LinkPage;
+export default LinksPage;

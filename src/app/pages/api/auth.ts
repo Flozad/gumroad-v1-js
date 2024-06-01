@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { hash } from 'bcryptjs';
-import User from '../models/User';
-import connectDB from '../utils/db';
+import User from '../../models/User';
+import connectDB from '../../utils/db';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {

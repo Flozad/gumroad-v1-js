@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import Session from '../utils/sessions';
+import Session from '../../utils/sessions';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = new Session(req, res);
