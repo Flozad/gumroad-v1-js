@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import { useRouter } from 'next/router';
 import { isAuthenticated, getUserId } from '../utils/auth';
 import axios from 'axios';
+import Link from 'next/link';
 
 const Account: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -86,6 +87,9 @@ const Account: React.FC = () => {
         <p>
           <label htmlFor="payment_address">PayPal address: </label>
           <input id="payment_address" name="payment_address" type="text" placeholder="PayPal Address" value={formData.payment_address} onChange={handleInputChange} />
+        </p>
+        <p>
+          <Link href="/scheduler">Sync your payments</Link>
         </p>
         <p>
           <button type="submit">Update account details</button>

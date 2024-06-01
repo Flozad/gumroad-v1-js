@@ -94,7 +94,7 @@ const LinksPage: React.FC = () => {
 
 
   return (
-    <Layout title="Links" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={true} userBalance={data.balance} bodyId="page-links">
+    <Layout title="Links" hideFooter={false} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={true} userBalance={data.balance} bodyId="page-links">
       <div id="links-management">
         <h3>Your Links</h3>
         {showError && <small className="error">{errorMessage}</small>}

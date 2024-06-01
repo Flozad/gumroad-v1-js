@@ -38,7 +38,7 @@ const Index: React.FC = () => {
   };
 
   return (
-    <Layout title="Home" hideFooter={true} hideHeader={true} showLoginLink={false} loggedIn={false} onLinksPage={false} userBalance={0} bodyId="page-home">
+    <Layout title="Home" hideFooter={false} hideHeader={true} showLoginLink={false} loggedIn={false} onLinksPage={false} userBalance={0} bodyId="page-home">
       <div id="intro">
         <div id="video"></div>
         <ul>

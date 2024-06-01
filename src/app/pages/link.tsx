@@ -29,7 +29,7 @@ const LinkPage: React.FC = () => {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      // router.push('/login');
+      router.push('/login');
       return;
     }
   }, [router]);
@@ -59,7 +59,7 @@ const LinkPage: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setLinkToShare(data.link.unique_permalink);
+        setLinkToShare(data.link._id);
         setIsEditing(true);
       } else {
         const data = await response.json();
@@ -111,7 +111,7 @@ const LinkPage: React.FC = () => {
         </div>
       )}
 
-      <form id="large-form" action={isEditing ? `/edit/${router.query.permalink}` : '/create'} method="post" className={isEditing ? 'editing-link' : ''} onSubmit={handleFormSubmit}>
+      <form id="large-form" method="post" className={isEditing ? 'editing-link' : ''} onSubmit={handleFormSubmit}>
         {isEditing ? (
           <>
             <Link href="#" id="delete_link" onClick={showConfirm}>delete this link</Link>

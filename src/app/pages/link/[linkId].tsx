@@ -170,19 +170,12 @@ const LinkEditPage: React.FC = () => {
         <Link href={`http://twitter.com/share?text=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&via=gumroad&url=${encodeURIComponent(linkToShare)}`} className="twitter button" onClick={() => popup(linkToShare)}>
           Share on Twitter
         </Link>
+        <br />
+        <br />
 
-        <div id="analytics-box">
-          <p>
-            <strong>{views}</strong> views <span className="arrow">→</span>{' '}
-            <img
-              src={`https://chart.googleapis.com/chart?chf=bg,s,00000000&cht=p&chd=t:${conversion},${100 - conversion}&chds=0,100&chs=100x100&chco=797874,79787420`}
-              height="20"
-              width="20"
-              alt="conversion chart"
-            />{' '}
-            <span>{conversion}%</span> <span className="arrow">→</span> <strong>{numberOfDownloads}</strong> downloads at ≈ <strong>{price}</strong> <span className="arrow">→</span> <strong>{totalProfit}</strong> in profit!
-          </p>
-        </div>
+        <Link href={`/sale/${linkToShare}`} className="button">
+          share link
+        </Link>
       </div>
       <form id="large-form" method="post" className="editing-link" onSubmit={handleFormSubmit}>
         <Link href="#" id="delete_link" onClick={showConfirm}>delete this link</Link>

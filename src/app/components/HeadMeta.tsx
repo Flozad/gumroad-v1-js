@@ -9,6 +9,8 @@ interface HeadMetaProps {
 const HeadMeta: React.FC<HeadMetaProps> = ({ title }) => (
   <Head>
     <title>{title ? title : 'Gumroad - Selling should be as easy as sharing a link.'}</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" />
     <meta property="og:site_name" content="Gumroad" />
     <meta property="og:title" content="Gumroad" />
     <link rel="icon" href="./favicon.ico" />

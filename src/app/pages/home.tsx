@@ -84,7 +84,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <Layout title="Home" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={data.purchaseTotal} bodyId="page-home">
+    <Layout title="Home" hideFooter={false} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={data.purchaseTotal} bodyId="page-home">
       <div id="dashboard">
         <div className="chart">
           {data.showChart ? (
