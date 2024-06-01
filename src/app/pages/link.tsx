@@ -83,7 +83,7 @@ const LinkPage: React.FC = () => {
   };
 
   return (
-    <Layout title="Link" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={0} bodyId="page-link">
+    <Layout title="Link" hideFooter={false} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={0} bodyId="page-link">
       {isEditing && (
         <div id="share-box">
           <Link href={`http://www.facebook.com/dialog/feed?app_id=114816261931958&redirect_uri=http://gumroad.com/home&display=popup&message=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&link=${encodeURIComponent(linkToShare)}`} className="facebook button">
@@ -96,18 +96,12 @@ const LinkPage: React.FC = () => {
             Share on Twitter
           </Link>
 
-          <div id="analytics-box">
-            <p>
-              <strong>{views}</strong> views <span className="arrow">→</span>{' '}
-              <img
-                src={`https://chart.googleapis.com/chart?chf=bg,s,00000000&cht=p&chd=t:${conversion},${100 - conversion}&chds=0,100&chs=100x100&chco=797874,79787420`}
-                height="20"
-                width="20"
-                alt="conversion chart"
-              />{' '}
-              <span>{conversion}%</span> <span className="arrow">→</span> <strong>{numberOfDownloads}</strong> downloads at ≈ <strong>{price}</strong> <span className="arrow">→</span> <strong>{totalProfit}</strong> in profit!
-            </p>
-          </div>
+          <br />
+        <br />
+
+        <Link href={`/sale/${linkToShare}`} className="button">
+          share link
+        </Link>
         </div>
       )}
 
