@@ -49,7 +49,7 @@ const StatsPage: React.FC = () => {
   const last_purchase_date = data.lastPurchaseDate || 'N/A';
 
   return (
-    <Layout title="Stats" hideFooter={false} hideHeader={false} showLoginLink={false} loggedIn={false} onLinksPage={false} userBalance={0} bodyId="page-stats">
+    <Layout title="Stats" hideFooter={false} hideHeader={false} showLoginLink={false} loggedIn={false} onLinksPage={false} userBalance={data.balance} bodyId="page-stats">
       <div id="main-content">
         <h3>Gumroad lets you sell just like you share.</h3>
         <div className="mini-rule"></div>
@@ -60,7 +60,8 @@ const StatsPage: React.FC = () => {
         <p>They&apos;ve been viewed <strong>{number_of_views}</strong> times and downloaded <strong>{number_of_downloads}</strong> times.</p>
         <p>That&apos;s an average of <strong>{average_views}</strong> views and <strong>{average_downloads}</strong> downloads per link!</p>
         <p>The last link was added <strong>{last_link_date}</strong> ago.</p>
-        <p>The last purchase was made <strong>{last_purchase_date}</strong> ago.</p>
+        <p>The last purchase was made <strong>{
+        }</strong> ago.</p>
       </div>
     </Layout>
   );

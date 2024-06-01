@@ -14,10 +14,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const purchases = await Purchase.find({});
       const numberOfPurchases = purchases.length;
       const purchaseTotal = purchases.reduce((sum, p) => sum + p.amount, 0);
-      const numberOfViews = 2;
-      const numberOfDownloads = 3;
-      const lastLinkDate = 4;
-      const lastPurchaseDate = 5;
+
+      // Calculate number of views and downloads
+      const links = await Link.find({});
+      const numberOfViews = links.reduce((sum, link) => sum + (link.number_of_views || 0), 0);
+      const numberOfDownloads = links.reduce((sum, link) => sum + (link.number_of_downloads || 0), 0);
+
+      // Get the most recent link creation date
+      const lastLink = await Link.findOne({}).sort({ create_date: -1 });
+      const lastLinkDate = lastLink ? lastLink.create_date : null;
+
+      // Get the most recent purchase date
+      const lastPurchase = await Purchase.findOne({}).sort({ date: -1 });
+      const lastPurchaseDate = lastPurchase ? lastPurchase.date : null;
 
       res.status(200).json({
         numberOfLinks,

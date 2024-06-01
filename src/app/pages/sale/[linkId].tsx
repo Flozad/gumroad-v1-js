@@ -6,15 +6,31 @@ import Link from 'next/link';
 
 const VisitingLinkPage: React.FC = () => {
   const router = useRouter();
-  const { linkId } = router.query; // Assuming the linkId is passed as a query parameter
+  const { linkId } = router.query;
   const [formData, setFormData] = useState({
     card_number: '',
     expiry_month: '1',
     expiry_year: '2023',
     card_security_code: '',
   });
-  const [message, setMessage] = useState('Pay $10.00'); // Example price, replace with actual data
+  const [message, setMessage] = useState('Pay $');
   const [isError, setIsError] = useState(false);
+  const [linkData, setLinkData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchLinkData = async () => {
+      if (!linkId) return;
+      try {
+        const response = await axios.get(`/api/links/${linkId}`);
+        setLinkData(response.data);
+        setMessage(`Pay $${response.data.price}`);
+      } catch (error) {
+        setIsError(true);
+        setMessage('Failed to load link data.');
+      }
+    };
+    fetchLinkData();
+  }, [linkId]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -29,7 +45,7 @@ const VisitingLinkPage: React.FC = () => {
     setMessage('Processing...');
     setIsError(false);
     try {
-      const response = await axios.post(`/api/sale/${linkId}`, formData); // Pass the linkId in the URL
+      const response = await axios.post(`/api/sale/${linkId}`, formData);
       if (response.data.success) {
         setMessage('Success!');
         window.location.href = response.data.redirect_url;
@@ -43,15 +59,19 @@ const VisitingLinkPage: React.FC = () => {
     }
   };
 
+  if (!linkData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Layout title="Visiting Link" hideFooter={true} hideHeader={true} showLoginLink={false} loggedIn={false} onLinksPage={false} userBalance={0} bodyId="page-visiting-link">
       <div id="link-content">
         <div id="header">
           <Link href="/"><h1 id="logo">Gumroad</h1></Link>
-          <p>Name from User</p>
+          <p>{linkData.owner.name}</p> {/* Assuming linkData.owner contains user info */}
         </div>
         <div id="description-box">
-          <p>Description goes here</p> {/* Replace with actual data */}
+          <p>{linkData.description}</p>
         </div>
         <form id="large-form" name="large-form" action="" method="post" onSubmit={handleFormSubmit}>
           <h3 className={isError ? 'error' : ''}>{message}</h3>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { useRouter } from 'next/router';
 import { isAuthenticated, getUserId } from '../utils/auth';
+import Link from 'next/link';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -61,6 +62,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <Layout title="Login" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={false} onLinksPage={false} userBalance={0} bodyId="page-login">
+    <div className="top-bar"></div>
       <form id="large-form" action="/login" method="post" onSubmit={handleFormSubmit}>
         <h3>Login {showError && <small className="error">{errorMessage}</small>}</h3>
         <p>
@@ -68,6 +70,8 @@ const LoginPage: React.FC = () => {
           <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} />
           <button type="submit">Login</button>
         </p>
+        <p>Don&apos;t have an account? <Link href="/">Create one here</Link></p>
+        <p><Link href="/forgot-password">Forgot your password?</Link></p>
         <div className="rainbow bar"></div>
       </form>
       <p id="below-form-p">&nbsp;</p>

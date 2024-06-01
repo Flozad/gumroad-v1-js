@@ -80,6 +80,8 @@ const Index: React.FC = () => {
             />
             <button type="submit">Start selling!</button>
           </p>
+          <p>Already have an account? <Link href="/login">Login in here</Link></p>
+
           <div className="rainbow bar"></div>
         </form>
       </div>

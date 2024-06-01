@@ -9,7 +9,7 @@ const VisitingLinkPage: React.FC = () => {
     expiry_year: '2023',
     card_security_code: '',
   });
-  const [message, setMessage] = useState('Pay $10.00'); // Example price, replace with actual data
+  const [message, setMessage] = useState('Pay $');
   const [isError, setIsError] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

@@ -2,6 +2,8 @@ import React from "react";
 import Footer from "./Footer";
 import HeadMeta from "./HeadMeta";
 import Link from 'next/link'
+import router from "next/router";
+
 interface LayoutProps {
   title: string;
   hideFooter: boolean;
@@ -13,6 +15,12 @@ interface LayoutProps {
   bodyId: string;
   children: React.ReactNode;
 }
+
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  console.log('Logged out');
+  router.push('/login');
+};
 
 const Layout: React.FC<LayoutProps> = ({
   title,
@@ -53,7 +61,8 @@ const Layout: React.FC<LayoutProps> = ({
                   )}
                   &bull; <span className="balance">${userBalance}</span> &bull;{" "}
                   <Link href="/settings">Settings</Link> &bull;{" "}
-                  <Link href="/logout">Logout</Link>
+                  <Link onClick={handleLogout} href="/login"
+                  >Logout</Link>
                 </p>
               ) : (
                 <p>

@@ -3,6 +3,26 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { getUserId } from '../../utils/auth';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const LinkEditPage: React.FC = () => {
   const router = useRouter();
@@ -17,9 +37,40 @@ const LinkEditPage: React.FC = () => {
   });
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [user, setUser] = useState<any>(null);
+  const [linkToShare, setLinkToShare] = useState('');
+  const [views, setViews] = useState(0);
+  const [conversion, setConversion] = useState(0);
+  const [numberOfDownloads, setNumberOfDownloads] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [totalProfit, setTotalProfit] = useState(0);
+  const [chartData, setChartData] = useState<any>(null);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const userId = getUserId();
+      if (!userId) {
+        return;
+      }
+      try {
+        const response = await fetch(`/api/user/${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        } else {
+          setShowError(true);
+          setErrorMessage('Failed to fetch user data');
+        }
+      } catch (error) {
+        setShowError(true);
+        setErrorMessage('An unexpected error occurred');
+      }
+    };
+
     const fetchLink = async () => {
+      if (!linkId) {
+        return;
+      }
       try {
         const response = await fetch(`/api/links/${linkId}`);
         if (response.ok) {
@@ -32,18 +83,35 @@ const LinkEditPage: React.FC = () => {
             description: data.description,
             downloadLimit: data.download_limit,
           });
+          setViews(data.views);
+          setNumberOfDownloads(data.downloads);
+          setPrice(data.price);
+          setTotalProfit(data.totalProfit);
+          setLinkToShare(data._id);
+          setChartData({
+            labels: Object.keys(data.groupedPurchases),
+            datasets: [
+              {
+                label: 'Purchases',
+                data: Object.values(data.groupedPurchases),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+              }
+            ]
+          });
         } else {
           setShowError(true);
           setErrorMessage('Failed to fetch link details');
         }
       } catch (error) {
-        setShowError(true);
         setErrorMessage('An unexpected error occurred');
       }
     };
 
     if (linkId) fetchLink();
-  }, [linkId]);
+    if (!user) fetchUser();
+  }, [linkId, user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -80,10 +148,44 @@ const LinkEditPage: React.FC = () => {
     }
   };
 
+  const showConfirm = () => {
+    if (confirm("Are you sure you want to delete this link? There's no going back!")) {
+      // Add delete logic here
+    }
+  };
+
+  const popup = (url: string) => {
+    window.open(url, 'Share on Twitter', 'height=150,width=550');
+  };
+
   return (
-    <Layout title="Edit Link" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={0} bodyId="page-edit-link">
+    <Layout title="Edit Link" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={user ? user.balance : 0} bodyId="page-edit-link">
+      <div id="share-box">
+        <Link href={`http://www.facebook.com/dialog/feed?app_id=114816261931958&redirect_uri=http://gumroad.com/home&display=popup&message=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&link=${encodeURIComponent(linkToShare)}`} className="facebook button">
+          Share on Facebook
+        </Link>
+        <p>
+          <input type="text" value={linkToShare} id="link_to_share" readOnly title="Share this link to sell!" onClick={(e) => (e.target as HTMLInputElement).select()} />
+        </p>
+        <Link href={`http://twitter.com/share?text=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&via=gumroad&url=${encodeURIComponent(linkToShare)}`} className="twitter button" onClick={() => popup(linkToShare)}>
+          Share on Twitter
+        </Link>
+
+        <div id="analytics-box">
+          <p>
+            <strong>{views}</strong> views <span className="arrow">→</span>{' '}
+            <img
+              src={`https://chart.googleapis.com/chart?chf=bg,s,00000000&cht=p&chd=t:${conversion},${100 - conversion}&chds=0,100&chs=100x100&chco=797874,79787420`}
+              height="20"
+              width="20"
+              alt="conversion chart"
+            />{' '}
+            <span>{conversion}%</span> <span className="arrow">→</span> <strong>{numberOfDownloads}</strong> downloads at ≈ <strong>{price}</strong> <span className="arrow">→</span> <strong>{totalProfit}</strong> in profit!
+          </p>
+        </div>
+      </div>
       <form id="large-form" method="post" className="editing-link" onSubmit={handleFormSubmit}>
-        <Link href="#" id="delete_link" onClick={() => confirm("Are you sure you want to delete this link? There's no going back!")}>delete this link</Link>
+        <Link href="#" id="delete_link" onClick={showConfirm}>delete this link</Link>
         <h3>Edit link {showError && <small className="error">{errorMessage}</small>}</h3>
         <p>
           <label htmlFor="name">Name:</label>
@@ -123,6 +225,11 @@ const LinkEditPage: React.FC = () => {
         <div className="rainbow bar"></div>
       </form>
       <p id="below-form-p">&nbsp;</p>
+      {chartData && (
+        <div className="chart">
+          <Bar data={chartData} />
+        </div>
+      )}
     </Layout>
   );
 };
