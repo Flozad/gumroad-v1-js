@@ -1,7 +1,6 @@
 import React from 'react';
 import Layout from '../components/Layout';
-import { Link } from 'react-router-dom';
-
+import Link from 'next/link'
 
 const Index: React.FC = () => {
   const showError = false;
@@ -43,7 +42,7 @@ const Index: React.FC = () => {
       <div id="press">
         <div className="testimonial">
           <blockquote>“Incredibly easy… in fact, just writing this, I&apos;m coming up with ideas and kicking myself for having not sold things in the past. Fortunately, moving forward, I won&apos;t have to kick myself anymore.”</blockquote>
-          <span className="writer">Brad McCarty  - <Link to="http://thenextweb.com/apps/2011/04/09/gumroad-sell-digital-goods-with-a-link-no-storefront-needed/">The Next Web</Link></span>
+          <span className="writer">Brad McCarty  - <Link href="http://thenextweb.com/apps/2011/04/09/gumroad-sell-digital-goods-with-a-link-no-storefront-needed/">The Next Web</Link></span>
         </div>
       </div>
     </Layout>

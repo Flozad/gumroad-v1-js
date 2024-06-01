@@ -1,7 +1,6 @@
 import React from 'react';
 import Layout from '../components/Layout';
-import { Link } from 'react-router-dom';
-
+import Link from 'next/link'
 const Faq: React.FC = () => (
   <Layout title="FAQ" hideFooter={false} hideHeader={false} showLoginLink={false} loggedIn={false} onLinksPage={false} userBalance={0} bodyId="page-faq">
     <div id="main-content">
@@ -10,7 +9,7 @@ const Faq: React.FC = () => (
       <ol>
         <li>
           <h4>What can I charge per link?</h4>
-          <p>Each link can be as little as $0.99 and as much as $999. Feel limited? <Link to="mailto:hi@gumroad.com">Email us</Link>.</p>
+          <p>Each link can be as little as $0.99 and as much as $999. Feel limited? <Link href="mailto:hi@gumroad.com">Email us</Link>.</p>
         </li>
         <li>
           <h4>What is Gumroad&apos;s cut?</h4>
@@ -22,7 +21,7 @@ const Faq: React.FC = () => (
         </li>
         <li>
           <h4>Why is this FAQ so short?</h4>
-          <p>We believe that with simple products come short FAQs. Please <Link to="mailto:hi@gumroad.com">send us an email</Link> if you have a question that isn&apos;t answered here.</p>
+          <p>We believe that with simple products come short FAQs. Please <Link href="mailto:hi@gumroad.com">send us an email</Link> if you have a question that isn&apos;t answered here.</p>
         </li>
       </ol>
     </div>

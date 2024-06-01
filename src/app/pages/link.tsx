@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { useRouter } from 'next/router';
-import { Link } from 'react-router-dom';
-
+import Link from 'next/link'
 const LinkPage: React.FC = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -60,13 +59,13 @@ const LinkPage: React.FC = () => {
     <Layout title="Link" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={0} bodyId="page-link">
       {isEditing && (
         <div id="share-box">
-          <Link to={`http://www.facebook.com/dialog/feed?app_id=114816261931958&redirect_uri=http://gumroad.com/home&display=popup&message=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&link=${encodeURIComponent(linkToShare)}`} className="facebook button">
+          <Link href={`http://www.facebook.com/dialog/feed?app_id=114816261931958&redirect_uri=http://gumroad.com/home&display=popup&message=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&link=${encodeURIComponent(linkToShare)}`} className="facebook button">
             Share on Facebook
           </Link>
           <p>
             <input type="text" value={linkToShare} id="link_to_share" readOnly title="Share this link to sell!" onClick={(e) => (e.target as HTMLInputElement).select()} />
           </p>
-          <Link to={`http://twitter.com/share?text=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&via=gumroad&url=${encodeURIComponent(linkToShare)}`} className="twitter button" onClick={() => popup(linkToShare)}>
+          <Link href={`http://twitter.com/share?text=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&via=gumroad&url=${encodeURIComponent(linkToShare)}`} className="twitter button" onClick={() => popup(linkToShare)}>
             Share on Twitter
           </Link>
 
@@ -88,7 +87,7 @@ const LinkPage: React.FC = () => {
       <form id="large-form" action={isEditing ? `/edit/${router.query.permalink}` : '/create'} method="post" className={isEditing ? 'editing-link' : ''} onSubmit={handleFormSubmit}>
         {isEditing ? (
           <>
-            <Link to="#" id="delete_link" onClick={showConfirm}>delete this link</Link>
+            <Link href="#" id="delete_link" onClick={showConfirm}>delete this link</Link>
             <h3>Edit link {showError && <small className="error">{errorMessage}</small>}</h3>
           </>
         ) : (

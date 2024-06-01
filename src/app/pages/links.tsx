@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
-import { Link } from 'react-router-dom';
-
+import Link from 'next/link'
 const LinkPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -37,7 +36,7 @@ const LinkPage: React.FC = () => {
       <form id="large-form" action={isEditing ? `/edit/${formData.name}` : '/create'} method="post" className={isEditing ? 'editing-link' : ''} onSubmit={handleFormSubmit}>
         {isEditing ? (
           <>
-            <Link to="#" id="delete_link" onClick={() => confirm("Are you sure you want to delete this link? There's no going back!")}>delete this link</Link>
+            <Link href="#" id="delete_link" onClick={() => confirm("Are you sure you want to delete this link? There's no going back!")}>delete this link</Link>
             <h3>Edit link {showError && <small className="error">{errorMessage}</small>}</h3>
           </>
         ) : (

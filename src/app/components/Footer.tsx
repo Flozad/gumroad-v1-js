@@ -1,6 +1,7 @@
 import React from 'react';
 import Copyright from './Copyright';
-import { Link } from 'react-router-dom';
+import Link from 'next/link'
+
 interface FooterProps {
   hideFooter?: boolean;
 }
@@ -15,10 +16,10 @@ const Footer: React.FC<FooterProps> = ({ hideFooter }) => {
         <div id="inner-footer">
           <Copyright />
           <p id="footer-navigation">
-            <Link to="/about">About</Link> &bull;
-            <Link to="/faq">FAQ</Link> &bull;
-            <Link to="http://twitter.com/gumroad/">Twitter</Link> &bull;
-            <Link to="http://facebook.com/gumroad/">Facebook</Link>
+            <Link href="/about">About</Link> &bull;
+            <Link href="/faq">FAQ</Link> &bull;
+            <Link href="http://twitter.com/gumroad/">Twitter</Link> &bull;
+            <Link href="http://facebook.com/gumroad/">Facebook</Link>
           </p>
         </div>
       </div>

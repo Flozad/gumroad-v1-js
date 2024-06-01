@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-
+import Link from 'next/link'
 const VisitingLinkPage: React.FC = () => {
   const [formData, setFormData] = useState({
     card_number: '',
@@ -44,7 +43,7 @@ const VisitingLinkPage: React.FC = () => {
     <Layout title="Visiting Link" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={false} onLinksPage={false} userBalance={0} bodyId="page-visiting-link">
       <div id="link-content">
         <div id="header">
-          <Link to="/"><h1 id="logo">Gumroad</h1></Link>
+          <Link href="/"><h1 id="logo">Gumroad</h1></Link>
           <p>Name from User</p> {/* Replace with actual data */}
         </div>
         <div id="description-box">

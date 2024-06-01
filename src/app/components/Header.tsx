@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-sync-scripts */
 import React from 'react';
 import Head from 'next/head';
-import { Link } from 'react-router-dom';
+import Link from 'next/link'
 
 interface HeaderProps {
   title?: string;
@@ -46,24 +46,24 @@ const Header: React.FC<HeaderProps> = ({
       <div id="wrapper">
         {!hideHeader && (
           <div id="header">
-            <Link to="/"><h1 id="logo">Gumroad</h1></Link>
+            <Link href="/"><h1 id="logo">Gumroad</h1></Link>
             {showLoginLink ? (
-              <p>Have an account? <Link to="/login" id="login-link" className="underline">Login</Link></p>
+              <p>Have an account? <Link href="/login" id="login-link" className="underline">Login</Link></p>
             ) : (
               loggedIn ? (
                 <p id="account-navigation">
-                  {onLinksPage ? <Link to="/home">Home</Link> : <Link to="/links">Your links</Link>}
-                  &bull; <span className="balance">${userBalance}</span> &bull; <Link to="/settings">Settings</Link> &bull; <Link to="/logout">Logout</Link>
+                  {onLinksPage ? <Link href="/home">Home</Link> : <Link href="/links">Your links</Link>}
+                  &bull; <span className="balance">${userBalance}</span> &bull; <Link href="/settings">Settings</Link> &bull; <Link href="/logout">Logout</Link>
                 </p>
               ) : (
-                <p>Thanks for using Gumroad! <Link to="mailto:hi@gumroad.com">Feedback?</Link></p>
+                <p>Thanks for using Gumroad! <Link href="mailto:hi@gumroad.com">Feedback?</Link></p>
               )
             )}
             <ul id="navigation" className="hidden">
-              <li><Link to="#">Tour</Link></li>
-              <li><Link to="#">Examples</Link></li>
-              <li><Link to="#">Sign up</Link></li>
-              <li><Link to="/faq">FAQ</Link></li>
+              <li><Link href="#">Tour</Link></li>
+              <li><Link href="#">Examples</Link></li>
+              <li><Link href="#">Sign up</Link></li>
+              <li><Link href="/faq">FAQ</Link></li>
             </ul>
           </div>
         )}
