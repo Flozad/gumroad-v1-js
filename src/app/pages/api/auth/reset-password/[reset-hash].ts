@@ -23,8 +23,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
-  console.log('reset_hash:', reset_hash);
-
   try {
     const user = await User.findOne({ email, reset_hash });
     if (!user) {

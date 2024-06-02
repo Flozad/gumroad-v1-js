@@ -15,7 +15,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await connectDB();
 
     const user = await User.findOne({ email });
-    console.log('user', user);
 
     if (!user) {
       return res.status(400).json({ message: 'No user found with that email' });
@@ -32,8 +31,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       process.env.JWT_SECRET as string,
       { expiresIn: '1h' }
     );
-
-    console.log('token', token);
 
     return res.status(200).json({ token });
   } else {

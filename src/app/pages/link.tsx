@@ -25,11 +25,9 @@ const LinkPage: React.FC = () => {
   const [price, setPrice] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
 
-  console.log(localStorage.getItem('token'));
-
   useEffect(() => {
     if (!isAuthenticated()) {
-      // router.push('/login');
+      router.push('/login');
       return;
     }
   }, [router]);
@@ -124,6 +122,12 @@ const LinkPage: React.FC = () => {
           </p>
           <Link href={`http://twitter.com/share?text=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&via=gumroad&url=${encodeURIComponent(linkToShare)}`} className="twitter button" onClick={() => popup(linkToShare)}>
             Share on Twitter
+          </Link>
+          <br />
+          <br />
+
+          <Link href={`/sale/${linkToShare}`} className="button">
+            share link
           </Link>
 
           <div id="analytics-box">
