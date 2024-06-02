@@ -3,6 +3,7 @@ import Footer from "./Footer";
 import HeadMeta from "./HeadMeta";
 import Link from 'next/link'
 import router from "next/router";
+import { Analytics } from '@vercel/analytics/react';
 
 interface LayoutProps {
   title: string;
@@ -90,6 +91,7 @@ const Layout: React.FC<LayoutProps> = ({
           {children}
         </div>
         <Footer hideFooter={hideFooter} />
+        <Analytics />
       </body>
     </div>
   </html>

@@ -102,7 +102,6 @@ const LinkPage: React.FC = () => {
 
   const showConfirm = () => {
     if (confirm("Are you sure you want to delete this link? There's no going back!")) {
-      // Add delete logic here
     }
   };
 
@@ -129,19 +128,6 @@ const LinkPage: React.FC = () => {
           <Link href={`/sale/${linkToShare}`} className="button">
             share link
           </Link>
-
-          <div id="analytics-box">
-            <p>
-              <strong>{views}</strong> views <span className="arrow">→</span>{' '}
-              <img
-                src={`https://chart.googleapis.com/chart?chf=bg,s,00000000&cht=p&chd=t:${conversion},${100 - conversion}&chds=0,100&chs=100x100&chco=797874,79787420`}
-                height="20"
-                width="20"
-                alt="conversion chart"
-              />{' '}
-              <span>{conversion}%</span> <span className="arrow">→</span> <strong>{numberOfDownloads}</strong> downloads at ≈ <strong>{price}</strong> <span className="arrow">→</span> <strong>{totalProfit}</strong> in profit!
-            </p>
-          </div>
         </div>
       )}
 
