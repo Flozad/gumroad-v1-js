@@ -36,7 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         to: email,
         subject: 'Payment Confirmation',
         html: `<p>Thank you for your purchase of $${amount}.</p>
-               <p>You can access your purchased content <a href="${process.env.BASE_URL}/link/${linkId}">here</a>.</p>`,
+               <p>You can access your purchased content <a href="${link.url}">here</a>.</p>`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
