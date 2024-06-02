@@ -87,7 +87,7 @@ const LinkPage: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setLinkToShare(data.link.unique_permalink);
+        setLinkToShare(data.link._id);
         setIsEditing(true);
       } else {
         const data = await response.json();
