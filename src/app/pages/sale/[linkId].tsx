@@ -3,16 +3,18 @@ import Layout from '../../components/Layout';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import CheckoutForm from '../../components/checkoutForm';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const stripePromise = loadStripe("pk_test_51LoFbnDIzoRf0vqQN1smZCGcRkrsgxMF2zoScfEwMtSB8KHrdHD539ojWzlEgtV5FyFx65ErGGTF3qFxBXL1ETBx00RDQXoa4H");
 
 const VisitingLinkPage: React.FC = () => {
   const router = useRouter();
   const { linkId } = router.query;
-  const [formData, setFormData] = useState({
-    card_number: '',
-    expiry_month: '1',
-    expiry_year: '2023',
-    card_security_code: '',
-  });
   const [message, setMessage] = useState('Pay $');
   const [isError, setIsError] = useState(false);
   const [linkData, setLinkData] = useState<any>(null);
@@ -32,33 +34,6 @@ const VisitingLinkPage: React.FC = () => {
     fetchLinkData();
   }, [linkId]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setMessage('Processing...');
-    setIsError(false);
-    try {
-      const response = await axios.post(`/api/sale/${linkId}`, formData);
-      if (response.data.success) {
-        setMessage('Success!');
-        window.location.href = response.data.redirect_url;
-      } else {
-        setMessage(response.data.error_message);
-        setIsError(true);
-      }
-    } catch (error) {
-      setMessage('An error occurred. Please try again.');
-      setIsError(true);
-    }
-  };
-
   if (!linkData) {
     return <div>Loading...</div>;
   }
@@ -73,37 +48,11 @@ const VisitingLinkPage: React.FC = () => {
         <div id="description-box">
           <p>{linkData.description}</p>
         </div>
-        <form id="large-form" name="large-form" action="" method="post" onSubmit={handleFormSubmit}>
-          <h3 className={isError ? 'error' : ''}>{message}</h3>
-          <p>
-            <label htmlFor="card_number">Card Number:</label>
-            <input id="card_number" name="card_number" placeholder="Card number" type="text" value={formData.card_number} onChange={handleInputChange} />
-          </p>
-          <p id="expiry_p">
-            <label htmlFor="date_month">Card Expiry Date:</label>
-            <select id="date_month" name="expiry_month" value={formData.expiry_month} onChange={handleInputChange}>
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {new Date(0, i).toLocaleString('default', { month: 'long' })}
-                </option>
-              ))}
-            </select>
-            <span id="slash">/</span>
-            <select id="date_year" name="expiry_year" value={formData.expiry_year} onChange={handleInputChange}>
-              {Array.from({ length: 10 }, (_, i) => (
-                <option key={i + 2023} value={i + 2023}>
-                  {i + 2023}
-                </option>
-              ))}
-            </select>
-          </p>
-          <p>
-            <label htmlFor="card_security_code">Card Security Code:</label>
-            <input id="card_security_code" name="card_security_code" placeholder="Security code" type="text" value={formData.card_security_code} onChange={handleInputChange} />
-          </p>
-          <p className="last-p"><button type="submit" id="submit_button">Pay</button></p>
-          <div className="rainbow bar"></div>
-        </form>
+        {linkId && (
+          <Elements stripe={stripePromise}>
+            <CheckoutForm linkId={linkId as string | string[]} />
+          </Elements>
+        )}
       </div>
     </Layout>
   );

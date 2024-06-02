@@ -29,7 +29,7 @@ const LinkPage: React.FC = () => {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      router.push('/login');
+      // router.push('/login');
       return;
     }
   }, [router]);
@@ -40,6 +40,36 @@ const LinkPage: React.FC = () => {
       ...formData,
       [name]: value,
     });
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFormData(prevState => ({
+          ...prevState,
+          url: data.url
+        }));
+      } else {
+        setShowError(true);
+        setErrorMessage('Failed to upload file.');
+      }
+    } catch (error) {
+      setShowError(true);
+      setErrorMessage('An unexpected error occurred.');
+    }
   };
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,7 +89,7 @@ const LinkPage: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setLinkToShare(data.link._id);
+        setLinkToShare(data.link.unique_permalink);
         setIsEditing(true);
       } else {
         const data = await response.json();
@@ -83,7 +113,7 @@ const LinkPage: React.FC = () => {
   };
 
   return (
-    <Layout title="Link" hideFooter={false} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={0} bodyId="page-link">
+    <Layout title="Link" hideFooter={true} hideHeader={false} showLoginLink={false} loggedIn={true} onLinksPage={false} userBalance={0} bodyId="page-link">
       {isEditing && (
         <div id="share-box">
           <Link href={`http://www.facebook.com/dialog/feed?app_id=114816261931958&redirect_uri=http://gumroad.com/home&display=popup&message=Buy%20${encodeURIComponent(formData.name)}%20on%20Gumroad%21&link=${encodeURIComponent(linkToShare)}`} className="facebook button">
@@ -96,12 +126,18 @@ const LinkPage: React.FC = () => {
             Share on Twitter
           </Link>
 
-          <br />
-        <br />
-
-        <Link href={`/sale/${linkToShare}`} className="button">
-          share link
-        </Link>
+          <div id="analytics-box">
+            <p>
+              <strong>{views}</strong> views <span className="arrow">→</span>{' '}
+              <img
+                src={`https://chart.googleapis.com/chart?chf=bg,s,00000000&cht=p&chd=t:${conversion},${100 - conversion}&chds=0,100&chs=100x100&chco=797874,79787420`}
+                height="20"
+                width="20"
+                alt="conversion chart"
+              />{' '}
+              <span>{conversion}%</span> <span className="arrow">→</span> <strong>{numberOfDownloads}</strong> downloads at ≈ <strong>{price}</strong> <span className="arrow">→</span> <strong>{totalProfit}</strong> in profit!
+            </p>
+          </div>
         </div>
       )}
 
@@ -127,14 +163,14 @@ const LinkPage: React.FC = () => {
           <label htmlFor="url">URL:</label>
           <input id="url" name="url" type="text" placeholder="http://" value={formData.url} onChange={handleInputChange} />
           <div id="container">
-            <input type="file" id="pickfile" onChange={(e) => { /* Add file upload logic here */ }} />
+            <input type="file" id="pickfile" onChange={handleFileUpload} />
           </div>
         </p>
         <p>
           <label htmlFor="preview_url">Preview URL:</label>
           <input id="preview_url" name="previewUrl" type="text" placeholder="http://" value={formData.previewUrl} onChange={handleInputChange} />
           <div id="preview_container">
-            <input type="file" id="pickpreviewfile" onChange={(e) => { /* Add preview file upload logic here */ }} />
+            <input type="file" id="pickpreviewfile" onChange={handleFileUpload} />
           </div>
         </p>
         <p>

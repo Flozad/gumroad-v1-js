@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import Layout from "../components/Layout";
-import { useRouter } from "next/router";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import Layout from '../components/Layout';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const SuccessPage: React.FC = () => {
   const router = useRouter();
   const { linkId } = router.query;
 
-  const [sellerName, setSellerName] = useState("");
+  const [sellerName, setSellerName] = useState('');
   const [linkData, setLinkData] = useState<any>(null);
   const [isError, setIsError] = useState(false);
-  const [message, setMessage] = useState("");
-    const [userId, setUserId] = useState("");
+  const [message, setMessage] = useState('');
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
     const fetchLinkData = async () => {
@@ -39,7 +39,7 @@ const SuccessPage: React.FC = () => {
           setSellerName(response.data.name);
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
+          console.error('Error fetching user data:', error);
         });
     }
   }, [userId]);
